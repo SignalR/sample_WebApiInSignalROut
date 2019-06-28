@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,8 +29,6 @@ namespace WebApiInSignalROut.Services
         {
             while(!stoppingToken.IsCancellationRequested)
             {
-                Logger.LogInformation("Checking in-memory queue for old entries");
-
                 var tmpList = InMemoryQueue.CallerQueue.ToList();
 
                 foreach(Tuple<string, DateTime> item in tmpList)
