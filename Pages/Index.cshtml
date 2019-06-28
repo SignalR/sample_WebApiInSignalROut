@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Call a Web API that responds via SignalR after long-running server-side processes complete.</p>
+    <input type="text" placeholder="username" id="username"/>
+    <input type="button" id="sendmessage" class="btn btn-primary" value="Send" onclick="callRestApi();"/>
+    <p id="status">Connection Status</p>
+</div>
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
+    <script src="~/js/signalr.js"></script>
+}
