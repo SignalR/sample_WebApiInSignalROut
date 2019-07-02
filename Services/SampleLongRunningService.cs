@@ -29,21 +29,12 @@ namespace WebApiInSignalROut.Services
         {
             while(!stoppingToken.IsCancellationRequested)
             {
-                var tmpList = InMemoryQueue.CallerQueue.ToList();
+                var item = await InMemoryQueue.CallerQueue.Reader.ReadAsync(stoppingToken);
 
-                foreach(Tuple<string, DateTime> item in tmpList)
-                {
-                    if((DateTime.Now - item.Item2).TotalSeconds > 10)
-                    {
-                        Logger.LogInformation($"Entry {item.Item1} queued at {item.Item2}. Notifying sender.");
-                        await SampleHubContext.Clients.Group(item.Item1).SendAsync("serverSideProcessComplete", item.Item1);
-                        
-                        Logger.LogInformation($"Entry {item.Item1} queued at {item.Item2}. Removing item.");
-                        InMemoryQueue.CallerQueue.Remove(item);
-                    }
-                }
+                Logger.LogInformation($"Entry {item.Item1} queued at {item.Item2}. Notifying sender.");
+                await SampleHubContext.Clients.Group(item.Item1).SendAsync("serverSideProcessComplete", item.Item1);
 
-                await Task.Delay(1000);
+                await Task.Delay(10000);
             }
         }
     }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace WebApiInSignalROut.Services
 {
@@ -7,14 +9,16 @@ namespace WebApiInSignalROut.Services
     {
         public InMemoryQueue()
         {
-            CallerQueue = new List<Tuple<string, DateTime>>();
+            CallerQueue = Channel.CreateUnbounded<Tuple<string, DateTime>>();
         }
 
-        internal List<Tuple<string, DateTime>> CallerQueue { get; private set; }
+        internal Channel<Tuple<string, DateTime>> CallerQueue { get; private set; }
 
-        public void Enqueue(string groupName)
+        public async Task Enqueue(string groupName)
         {
-            CallerQueue.Add(new Tuple<string, DateTime>(groupName, DateTime.Now.AddSeconds(10)));
+            await CallerQueue.Writer.WriteAsync(
+                new Tuple<string, DateTime>(groupName, DateTime.Now.AddSeconds(10))
+            );
         }
     }
 }
